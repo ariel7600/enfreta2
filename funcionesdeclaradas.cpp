@@ -11,6 +11,8 @@ vector<int> dadostockjugador2;
 vector <int> dadosElegidos={};
 int cantDadosStock1=6;
 int cantDadosStock2=6;
+int mayor=0;
+string record="Nadie";
 
 //tirada de dados de 6 caras
 int TirarDado6caras(){
@@ -27,7 +29,7 @@ string PreguntoNombreJugador1 (){
   cout<< "Ingresar el nombre del jugador 1: "<<endl;
   cout << endl;
   cin>> jugador1;
-  cout << "Bienvenido/a " << jugador1 << "!"<<endl;
+  cout << "¡Bienvenido/a " << jugador1 << "!"<<endl;
   system("pause");
   system ("cls");
 
@@ -40,7 +42,7 @@ string PreguntoNombreJugador2 (){
   cout<< "Ingresar el nombre del jugador 2: "<<endl;
   cout << endl;
   cin>> jugador2;
-  cout << "Bienvenido/a " << jugador2 << "!"<<endl;
+  cout << "¡Bienvenido/a " << jugador2 << "!"<<endl;
   system("pause");
   system ("cls");
 
@@ -56,15 +58,15 @@ vector<int> asignarDadosStock(vector<int>& vector1, int b){
 }
 // se activa en caso de victoria automatica
 void victoriaAutomatica(int &dados, int &puntaje, bool j){
-    if(dados<=0 && j){
+    if(dados==0 && j){
         system ("cls");
-        dados=0;
         puntaje+=10000;
         cout<<"Victoria!!"<<endl;
         cout<<"Ganaste automaticamente tras quedarte sin dados stock!!"<<endl;
         cout<<endl;
         system("pause");
     }
+
 }
 //muestro en pantalla dados stock
 void mostrarDadosStock(vector<int> vector){
@@ -117,7 +119,7 @@ void elegirDados ( vector <int> dadostockjugador1){
         }
         //no se puede elegir un valor mayor a la cantidad de dados stock
         if(j > dadostockjugador1.size()){
-            cout<<"Valor ingresado no valido"<<endl;
+            cout<<"Valor ingresado no válido"<<endl;
             continue;
         }
         numElegido[k]=j;
@@ -135,7 +137,7 @@ int sumaVector(vector<int> vector){
 }
 //muestra los dados stock elegidos en patnalla
 void mostrarElegidos(vector<int> vector){
-    cout<<"Combinacion elegida: ";
+    cout<<"Combinación elegida: ";
 
     for (int i=0;i<vector.size();i++){
         if(vector.size()==1){
@@ -157,16 +159,6 @@ bool tiradaExitosa(vector<int> vector, int k){
         exito=true;
     }
     return exito;
-}
-//cuento cuantos dados stock se eligieron en la jugada exitosa -VER hace lo mismo que len o .size()
-int cantDadoseElegidos(vector<int> vector){
-    int b=0;
-    for(int i =0;i<vector.size();i++){
-        if(vector[i]!=0){
-            b+=1;
-        }
-    }
-    return b;
 }
 //modifico las cantidades de dados stock luego de una jugada
 void modDadosStock(int &cantDadosStock1,int &cantDadosStock2, int dadosElegidos, bool tiradaExitosa, vector<int> b) {
@@ -201,11 +193,17 @@ cout<<endl<<
 system ("pause");
 system ("cls");
 }
+//puntaje record
+void mayorPuntaje(int &mayor, int puntaje, string jugador, string &record){
+    if (puntaje > mayor){
+        mayor = puntaje;
+        record=jugador;
+    }
+}
+
 //lanzamiento de dados de cada jugador por ronda
 void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &puntaje2){
-
     int dadosobjetivostotal, dadosobjetivojugador1[2];
-
     system ("cls");
     cout << "RONDA " << n<< endl;
     cout << endl;
@@ -213,10 +211,10 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     cout << endl << endl;
     system ("pause");
     system ("cls");
-
-    for (int i=0; i<2; i++){
+    //asigno valores a los dados objetivos
+    for (int i=0; i<2 ; i++){
       dadosobjetivojugador1[i] = TirarDado12caras();
-       }
+    }
     //valor del numero objetivo
     dadosobjetivostotal =  dadosobjetivojugador1[0] + dadosobjetivojugador1[1];
     cout << "RONDA " << n<< endl;
@@ -225,6 +223,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     cout << endl;
     cout << "Dados objetivos: " << dadosobjetivojugador1[0] << " y " << dadosobjetivojugador1[1] << " = " << dadosobjetivostotal;
     cout << endl;
+    cout<<endl;
     cout << "Dados stock: ";
     //asigno valores a los dados stock
     asignarDadosStock(dadostockjugador1, cantDadosStock1);
@@ -232,7 +231,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     mostrarDadosStock(dadostockjugador1);
     cout << endl;
     cout << endl;
-    cout << "A continuacion seleccionar los dados deseados";
+    cout << "A continuación seleccionar los dados deseados";
     cout << endl;
     cout << endl;
     //jugador elige dados stock
@@ -245,6 +244,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     cout << endl;
     cout << "Dados objetivos: " << dadosobjetivojugador1[0] << " y " << dadosobjetivojugador1[1] << " = " << dadosobjetivostotal;
     cout << endl;
+    cout<<endl;
     cout << "Dados stock: ";
     mostrarDadosStock(dadostockjugador1);
     cout << endl;
@@ -254,16 +254,21 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     bool exito=tiradaExitosa(dadosElegidos, dadosobjetivostotal);
     if(exito){
         cout<<"Tirada exitosa!"<<endl;
-        cout<<"Dados elegidos: "<<cantDadoseElegidos(dadosElegidos)<<" dados."<<endl;
-        cout<<"Puntos: "<<dadosobjetivostotal<<"x"<<cantDadoseElegidos(dadosElegidos)<<"="<<cantDadoseElegidos(dadosElegidos)*dadosobjetivostotal<<endl;
-        cout<<"Transfiere a "<<perdedor<<" "<<cantDadoseElegidos(dadosElegidos)<<" dados."<<endl;
-        puntaje1=puntaje1+cantDadoseElegidos(dadosElegidos)*dadosobjetivostotal;
-        modDadosStock(cantDadosStock1,cantDadosStock2, cantDadoseElegidos(dadosElegidos), exito, dadostockjugador1);
+        cout<<endl;
+        cout<<"Dados elegidos: "<<dadosElegidos.size()<<" dados."<<endl;
+        cout<<endl;
+        cout<<"Puntos: "<<dadosobjetivostotal<<"x"<<dadosElegidos.size()<<"="<<dadosElegidos.size()*dadosobjetivostotal<<endl;
+        cout<<endl;
+        cout<<"Transfiere a "<<perdedor<<" "<<dadosElegidos.size()<<" dados."<<endl;
+        cout<<endl;
+        puntaje1=puntaje1+dadosElegidos.size()*dadosobjetivostotal;
+        modDadosStock(cantDadosStock1,cantDadosStock2, dadosElegidos.size(), exito, dadostockjugador1);
         victoriaAutomatica(cantDadosStock1, puntaje1, exito);
         cout<<ganador<<" "<<cantDadosStock1<<" dados y "<< puntaje1<<"pts."<<endl;
+        cout<<endl;
         cout<<perdedor<<" "<<cantDadosStock2<<" dados y "<< puntaje2<<"pts."<<endl;
     } else{
-        modDadosStock(cantDadosStock1,cantDadosStock2, cantDadoseElegidos(dadosElegidos), exito, dadostockjugador1);
+        modDadosStock(cantDadosStock1,cantDadosStock2, dadosElegidos.size(), exito, dadostockjugador1);
         victoriaAutomatica(cantDadosStock2, puntaje2, exito);
         cout<<"No fue una tirada exitosa"<<endl;
         cout<<endl;
@@ -282,9 +287,8 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
     dadostockjugador1.clear();
     dadosElegidos.clear();
     //si el jugador que arranca la ronda ya no tiene dados entonces el juego termina -VER me parece que con vitoria automatica alcanza
-    if(cantDadosStock1==0){
-        cout<<endl;
-        cout<<"Fin del juego"<<endl;
+    if(cantDadosStock1==0 || puntaje1>9999){
+        return;
         system("cls");
     } else{
         int dadosobjetivostotal2=0, dadosobjetivojugador2[2];
@@ -299,12 +303,13 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         }
         //valor del numero objetivo
         dadosobjetivostotal2 =  dadosobjetivojugador2[0] + dadosobjetivojugador2[1];
-        cout << "RONDA " << n<< endl;
+        cout << "RONDA " << n << endl;
         cout << endl;
         cout << "Turno de " << perdedor;
         cout << endl;
         cout << "Dados objetivos: " << dadosobjetivojugador2[0] << " y " << dadosobjetivojugador2[1] << " = " << dadosobjetivostotal2;
         cout << endl;
+        cout<<endl;
         cout << "Dados stock: ";
         //asigno dados stock jugador 2
         asignarDadosStock(dadostockjugador2, cantDadosStock2);
@@ -312,7 +317,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         mostrarDadosStock(dadostockjugador2);
         cout<< endl;
         cout << endl;
-        cout << "A continuacion seleccionar los dados deseados";
+        cout << "A continuación seleccionar los dados deseados";
         cout << endl;
         cout << endl;
         //jugador 2 elije dados
@@ -327,6 +332,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         cout << endl;
         cout << "Dados objetivos: " << dadosobjetivojugador2[0] << " y " << dadosobjetivojugador2[1] << " = " << dadosobjetivostotal2;
         cout << endl;
+        cout<<endl;
         cout << "Dados stock: ";
         mostrarDadosStock(dadostockjugador2);
         cout << endl;
@@ -334,18 +340,24 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         //muestro dados elegidos
         mostrarElegidos(dadosElegidos);
         exito=tiradaExitosa(dadosElegidos, dadosobjetivostotal2);
+
         if(exito){
             cout<<"Tirada exitosa!"<<endl;
-            cout<<"Dados elegidos: "<<cantDadoseElegidos(dadosElegidos)<<" dados."<<endl;
-            cout<<"Puntos: "<<dadosobjetivostotal2<<"x"<<cantDadoseElegidos(dadosElegidos)<<"="<<cantDadoseElegidos(dadosElegidos)*dadosobjetivostotal2<<endl;
-            cout<<"Transfiere a "<<ganador<<" "<<cantDadoseElegidos(dadosElegidos)<<" dados."<<endl;
-            puntaje2=puntaje2+cantDadoseElegidos(dadosElegidos)*dadosobjetivostotal2;
-            modDadosStock(cantDadosStock1,cantDadosStock2, cantDadoseElegidos(dadosElegidos), exito, dadostockjugador2);
+            cout<<endl;
+            cout<<"Dados elegidos: "<<dadosElegidos.size()<<" dados."<<endl;
+            cout<<endl;
+            cout<<"Puntos: "<<dadosobjetivostotal2<<"x"<<dadosElegidos.size()<<"="<<dadosElegidos.size()*dadosobjetivostotal2<<endl;
+            cout<<endl;
+            cout<<"Transfiere a "<<ganador<<" "<<dadosElegidos.size()<<" dados."<<endl;
+            cout<<endl;
+            puntaje2=puntaje2+dadosElegidos.size()*dadosobjetivostotal2;
+            modDadosStock(cantDadosStock1,cantDadosStock2, dadosElegidos.size(), exito, dadostockjugador2);
             victoriaAutomatica(cantDadosStock2, puntaje2, exito);
             cout<<perdedor<<" "<<cantDadosStock2<<" dados y "<< puntaje2<<"pts."<<endl;
+            cout<<endl;
             cout<<ganador<<" "<<cantDadosStock1<<" dados y "<< puntaje1<<"pts."<<endl;
         }else{
-            modDadosStock(cantDadosStock1,cantDadosStock2, cantDadoseElegidos(dadosElegidos), exito, dadostockjugador2);
+            modDadosStock(cantDadosStock1,cantDadosStock2, dadosElegidos.size(),  exito, dadostockjugador2);
             victoriaAutomatica(cantDadosStock1, puntaje1, exito);
             cout<<"No fue una tirada exitosa"<<endl;
             cout<<endl;
@@ -364,7 +376,7 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         dadostockjugador2.clear();
     }
         // si paso la tercer ronda o algun jugador se queda sin dados stock muestro resultados finales
-        if(n==3 || cantDadosStock1== 0 || cantDadosStock2==0){
+        if(n==3 || cantDadosStock1==0 || cantDadosStock2==0){
         cout<<"RESULTADOS FINALES"<<endl;
         cout<<endl;
         cout<<endl;
@@ -388,19 +400,30 @@ void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &punta
         cout<<endl;
         if(puntaje1>puntaje2){
             cout<<"El ganador es: "<<jugador1<<" felicitaciones!!"<<endl;
+            cout<<endl;
+            mayorPuntaje(mayor, puntaje1, jugador1, record);
         }
         if(puntaje2>puntaje1){
             cout<<"El ganador es: "<<jugador2<<" felicitaciones!!"<<endl;
+            cout<<endl;
+            mayorPuntaje(mayor, puntaje2, jugador2, record);
         }
         if(puntaje1==puntaje2){
         cout<<"Empate"<<endl;
+        cout<<endl;
+        //se dirime quien se postula al puntaje maximo
+            if(cantDadosStock1<=cantDadosStock2){
+                mayorPuntaje(mayor, puntaje1, jugador1, record);
+            } else {
+                mayorPuntaje(mayor, puntaje2, jugador2, record);
+            }
         }
         //reseteo la cantidad de dados stock
         cantDadosStock1=cantDadosStock2=6;
-
         system("pause");
-        }
         system("cls");
+        return;
+        }
 }
 
 //muestra menu
@@ -409,16 +432,16 @@ void MostrarMenu (string& jugador1, string& jugador2) {
    int op, primerlanzamiento1, primerlanzamiento2;
 
     do {
-   cout << "MENU PRINCIPAL";
+   cout << "MENÚ PRINCIPAL";
    cout << endl;
    cout << endl;
    cout << "1 - JUGAR";
    cout << endl;
    cout << endl;
-   cout << "2 - ESTADISTICAS";
+   cout << "2 - ESTADÍSTICAS";
    cout << endl;
    cout << endl;
-   cout << "3 - CREDITOS";
+   cout << "3 - CRÉDITOS";
    cout << endl;
    cout << endl;
    cout << "-----------------";
@@ -432,14 +455,14 @@ void MostrarMenu (string& jugador1, string& jugador2) {
 
 
     switch (op) {
-    case 1:{
+        case 1:{
          int puntaje1=0;
          int puntaje2=0;
          system ("cls");
          jugador1 = PreguntoNombreJugador1();
          jugador2 = PreguntoNombreJugador2();
          cout << endl;
-         cout << jugador1 << " lanzara su tiro de prueba." << endl;
+         cout << jugador1 << " lanzará su tiro de prueba." << endl;
          cout << endl;
 
          system ("pause");
@@ -449,7 +472,7 @@ void MostrarMenu (string& jugador1, string& jugador2) {
          cout << endl;
          cout << endl;
          cout << endl;
-         cout << "Ahora " << jugador2 << " lanzara su tiro de prueba." << endl;
+         cout << "Ahora " << jugador2 << " lanzará su tiro de prueba." << endl;
          cout << endl;
          system ("pause");
 
@@ -460,22 +483,21 @@ void MostrarMenu (string& jugador1, string& jugador2) {
 
           if (primerlanzamiento1 == primerlanzamiento2){
              cout << endl;
-             cout << "�EMPATE!" << endl;
+             cout << "¡EMPATE!" << endl;
              cout << endl;
-             cout <<  "Se lanzaran otra vez los dados";
+             cout <<  "Se lanzarán otra vez los dados";
                do{
                 cout << endl;
                 cout << endl;
-                cout << jugador1 << " lanzara nuevamente." << endl;
+                cout << jugador1 << " lanzará nuevamente." << endl;
                 cout << endl;
                 system ("pause");
                 cout << endl;
                 primerlanzamiento1 = TirarDado6caras();
                 cout << jugador1 << ": " << primerlanzamiento1;
-
                 cout << endl;
                 cout << endl;
-                cout << "Ahora " << jugador2 << " lanzara nuevamente." << endl;
+                cout << "Ahora " << jugador2 << " lanzará nuevamente." << endl;
                 cout << endl;
                 system ("pause");
                 primerlanzamiento2 = TirarDado6caras();
@@ -496,27 +518,30 @@ void MostrarMenu (string& jugador1, string& jugador2) {
                 cout << endl;
                 cout << endl;
                 cout << endl;
-                cout << "�"<<ganador << " DARA INICIO A LA PARTIDA!" << endl;
+                cout << "¡"<<ganador << " DARÁ INICIO A LA PARTIDA!" << endl;
                 cout << endl;
                 system ("pause");
                 for(int i=1; i<4;i++){
-                    Rondas(jugador1, jugador2, i, puntaje1, puntaje2);
                     if(cantDadosStock1==0 || cantDadosStock2==0){
+                        i=4;
                         break;
                     }
-
+                    Rondas(jugador1, jugador2, i, puntaje1, puntaje2);
                 }
-                MostrarMenu(jugador1, jugador2);
                 cout << endl;
-                return;
                 break;
+                system("cls");
             }
-
-        case 2:
-            {
-            cout<< "Todavia no esta configurado ";
-            //  MuestroEstadisticas();
-            break;
+        case 2:{
+            system("cls");
+                cout<<"        PUNTAJE RECORD"    <<endl;
+                cout<<endl;
+                cout<<"Jugador"<<"            "<<"Puntaje"<<endl;
+                cout<<endl;
+                cout<<record<<"               "<<mayor<<endl;
+                system("pause");
+                system("cls");
+                break;
             }
         case 3:{
             cout<< "Todavia no esta configurado ";
@@ -524,7 +549,6 @@ void MostrarMenu (string& jugador1, string& jugador2) {
             break;
             }
         case 4:{
-
             system ("cls");
             MostrarTitulo();
             system ("cls");
@@ -532,13 +556,13 @@ void MostrarMenu (string& jugador1, string& jugador2) {
             break;
         }
         default:{
-        cout<< MostrarTitulo;
-}
-
-}
+        cout<<"Opción no válida"<<endl;
+         system("pause");
+        system("cls");
+        }
+        }
 
  } while (op !=4);
-
 }
 
 
