@@ -1,26 +1,23 @@
-#include <iostream>
-#include <ctime>
-#include <vector>
-#include "funciones.h"
+#include "juego.h"
 #include "rlutil.h"
-using namespace std;
+#include <windows.h>
 
-void MostrarTitulo();
-void MostrarMenu (string& jugador1, string& jugador2);
-void Rondas(string& jugador1, string& jugador2, int n, int &puntaje1, int &puntaje2);
-int TirarDado6caras();
-int TirarDado12caras();
-void victoriaAutomatica(int dados, int puntaje, bool j);
+int main()
+{
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+
+    // Configurar semilla aleatoria
+    srand(time(nullptr));
 
 
-int main (){
+    rlutil::saveDefaultColor();
+    rlutil::hidecursor();
 
- srand(time(nullptr));
- string jugador1;
- string jugador2;
+    // Crear y ejecutar el juego
+    JuegoRetro juego;
+    juego.mostrarMenu();
 
- MostrarTitulo();
- MostrarMenu(jugador1, jugador2);
-
-  return 0;
+    rlutil::showcursor();
+    return 0;
 }
